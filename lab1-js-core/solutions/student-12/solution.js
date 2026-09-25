@@ -22,7 +22,7 @@ function simpleTask() {
 // ===== ЗАДАНИЕ 2: Функции =====
 function getReviewerNumber(number, lab) {
      // 2.1 Функция определяющая номер ревьюера для вашей группы по вашему номеру и номеру лабораторной работы
-     return (number + lab) % 30;
+     return (number + lab - 1) % 30 + 1;
     
 }
 
@@ -63,7 +63,6 @@ function calculateArea(figure, ...params) {
             let p = params.reduce((acc, value) => acc + value, 0) / 2;
             switch (lenght) {
                 case 1: return (params[0] ** 2 * 3 ** 0.5) / 4
-                case 2: return (p * (p-params[0]) * (p - params[0]) * (p - params[1])) ** 0.5;
                 case 3: return (p * (p-params[0]) * (p - params[1]) * (p - params[2])) ** 0.5;
                 default: return 'Количество параметров для данной фигуры не подходит условию';
         }
@@ -167,8 +166,6 @@ function processArrays() {
     /*const victoria =  ваш код */
     const victoria = users.find(user => user.name === 'Виктория');
 
-
-
     // 5. Используйте reduce для подсчета суммы всех чисел
     /*const sum =  ваш код */
     const sum = numbers.reduce((acc, element) => acc + element, 0);
@@ -178,11 +175,9 @@ function processArrays() {
     /*const sortedByAge =  ваш код */
     const sortedByAge = [...users].sort((a,b) => b.age - a.age);
 
-
     // 7. Используйте метод для проверки, все ли пользователи старше 18 лет
     /*const allAdults =  ваш код */
     const allAdults = users.every(user => user.age >= 18);
-
 
     // 8. Создайте цепочку методов:
     //    - отфильтровать активных пользователей
@@ -262,7 +257,7 @@ function taskClasses() {
         // о транспортном средстве в формате: "Марка: [make], Модель: [model], Год: [year]".
         displayInfo() {
             // ..
-            return `Марка: ${this.make}, Модель: ${this.model}, Год: ${this._year}`;
+            console.log(`Марка: ${this.make}, Модель: ${this.model}, Год: ${this._year}`);
         }
 
         // Добавьте геттер age, который возвращает возраст транспортного средства
@@ -315,7 +310,7 @@ function taskClasses() {
         // Переопределите метод displayInfo() так, чтобы он также выводил количество дверей.
         // Используйте super.displayInfo() для вызова метода родителя.
         displayInfo() {
-            return `${super.displayInfo()}, Количество дверей: ${this.numDoors}`;
+            console.log(`${super.displayInfo()}, Количество дверей: ${this.numDoors}`);
         }
 
         // Добавьте метод honk(), который выводит "Beep beep!".
@@ -334,7 +329,7 @@ function taskClasses() {
 
         // Переопределите метод displayInfo() для вывода дополнительной информации о батарее.
         displayInfo() {
-            return `${super.displayInfo()}, Battery capacity: ${this.batteryCapacity} kWh`;
+            console.log(`${super.displayInfo()}, Battery capacity: ${this.batteryCapacity} kWh`);
         }
 
         // Добавьте метод calculateRange(), который рассчитывает примерный запас хода
@@ -473,8 +468,32 @@ function runTests() {
 
 
 
-    console.assert(validateDate("18.09.2026"));
-    console.assert(!validateDate("99.99.2026"));
+    console.assert(validateDate("01.01.1900"), "Минимальная дата должна быть допустима");
+    console.assert(validateDate("31.12.2099"), "Максимальная дата должна быть допустима");
+
+    // День
+    console.assert(!validateDate("00.01.2026"), "День 00 недопустим");
+    console.assert(validateDate("01.01.2026"), "День 01 допустим");
+    console.assert(validateDate("31.01.2026"), "День 31 допустим");
+    console.assert(!validateDate("32.01.2026"), "День 32 недопустим");
+
+    // Месяц
+    console.assert(!validateDate("01.00.2026"), "Месяц 00 недопустим");
+    console.assert(validateDate("01.01.2026"), "Месяц 01 допустим");
+    console.assert(validateDate("01.12.2026"), "Месяц 12 допустим");
+    console.assert(!validateDate("01.13.2026"), "Месяц 13 недопустим");
+
+    // Год
+    console.assert(!validateDate("01.01.1899"), "Год 1899 недопустим");
+    console.assert(validateDate("01.01.1900"), "Год 1900 допустим");
+    console.assert(validateDate("01.01.2099"), "Год 2099 допустим");
+    console.assert(!validateDate("01.01.2100"), "Год 2100 недопустим");
+
+    // Формат
+    console.assert(!validateDate("01-01-2026"), "Неверный разделитель");
+    console.assert(!validateDate("1.01.2026"), "Пропущен ведущий ноль дня");
+    console.assert(!validateDate("01.1.2026"), "Пропущен ведущий ноль месяца");
+    console.assert(!validateDate(""), "Пустая строка недопустима");
 
     console.log("Все тесты пройдены! ✅");
 }
